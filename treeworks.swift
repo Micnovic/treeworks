@@ -26,7 +26,7 @@ do {
 	dataInMemory = try Data(String(contentsOf: URL(fileURLWithPath: dataFileDir), encoding: .utf8).utf8)
 } catch {
 	dataInMemory = Data("{ \"value\": \"root\", \"inside\": []}".utf8)
-	print("\nNo save file. New file will be created: (username)/Documents/data.json")
+	print("\nNo save file. New file will be created: \(dataFileDir)")
 }
 let decoder = JSONDecoder()
 let root = try decoder.decode(Word.self, from: dataInMemory!)
@@ -257,7 +257,7 @@ func save(){
 		dataToSave += "]}"
 	}
 	recursion(root)
-	print(dataToSave)
+	print("Data saved to: \(dataFileDir)")
 	do {
 		try dataToSave.data(using: .utf8)!.write(to: URL(fileURLWithPath: dataFileDir))
 	} catch { 
