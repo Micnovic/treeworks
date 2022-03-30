@@ -14,7 +14,7 @@ To run type swift /treeworks.swift in terminal.
 * `c` - copy
 * `paste` - paste
 * `d` - delete
-* `h` - help. You are here
+* `h` - help
 * `q` - quit
 * `q q` or `qq` - quit without saving
 * You can optionally add index after almost any command. For example: `e 0`
