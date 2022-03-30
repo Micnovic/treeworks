@@ -17,4 +17,4 @@ To run type swift /treeworks.swift in terminal.
 * `h` - help. You are here
 * `q` - quit
 * `q q` or `qq` - quit without saving
-* You can optionally add index after almost any command. For example: `w 0`
+* You can optionally add index after almost any command. For example: `e 0`
