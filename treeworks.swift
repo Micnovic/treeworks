@@ -1,11 +1,11 @@
 import Foundation
 
-let dataFileName = "data.json"
+let dataFileName = "treeworksData.json"
 
 let dataFileDir: String = NSSearchPathForDirectoriesInDomains(
-FileManager.SearchPathDirectory.userDirectory, 
+FileManager.SearchPathDirectory.documentDirectory, 
 FileManager.SearchPathDomainMask.allDomainsMask, true)
-.first! + "/Gleb/" + dataFileName
+.first! + "/" + dataFileName
 
 
 var jsonString: String = ""
@@ -26,7 +26,7 @@ do {
 	dataInMemory = try Data(String(contentsOf: URL(fileURLWithPath: dataFileDir), encoding: .utf8).utf8)
 } catch {
 	dataInMemory = Data("{ \"value\": \"root\", \"inside\": []}".utf8)
-	print("No save file. New file will be created: ~/Users/$Username/data.json")
+	print("\nNo save file. New file will be created: (username)/Documents/data.json")
 }
 let decoder = JSONDecoder()
 let root = try decoder.decode(Word.self, from: dataInMemory!)
@@ -260,7 +260,9 @@ func save(){
 	print(dataToSave)
 	do {
 		try dataToSave.data(using: .utf8)!.write(to: URL(fileURLWithPath: dataFileDir))
-	} catch { }
+	} catch { 
+		print("Could not save file")
+	}
 	changesNotSaved = false
 }
 
