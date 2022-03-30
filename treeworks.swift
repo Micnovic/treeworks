@@ -61,13 +61,12 @@ func mainLoop() {
 		for _ in 0..<30 { print("") }
 
 		if inputArguments[0] == "p" {
-			print("Current word: " + currentNode.value)
-			for (index, word) in currentNode.inside.enumerated() {
-				print("\(index): \(word.value)")
-			}
+			printCurrentNode()
 			mainLoop()
 		} else if inputArguments[0] == "s" {
 			save()
+			print("Saved.")
+			printCurrentNode()	
 			mainLoop()
 		} else if inputArguments[0] == "w" {
 			changesNotSaved = true
@@ -82,9 +81,8 @@ func mainLoop() {
 			}
 			let newWord = Word(value: newWordValue, inside: [])
 			currentNode.inside.append(newWord)
-			for (index, word) in currentNode.inside.enumerated() {
-				print("\(index): \(word.value)")
-			}
+			printCurrentNode()
+			changesNotSaved = true
 			mainLoop()
 		} else if inputArguments[0] == "c" {
 			if inputIndex == nil {
@@ -96,6 +94,7 @@ func mainLoop() {
 			} else {
 				print("Invalid index")
 			}
+			printCurrentNode()
 			mainLoop()
 		} else if inputArguments[0] == "paste" {
 			if inputIndex == nil {
@@ -107,6 +106,8 @@ func mainLoop() {
 					currentNode.inside[inputIndex!] = buffer!
 				} else if inputIndex! == currentNode.inside.count {
 					currentNode.inside.append(buffer!)
+					printCurrentNode()
+					changesNotSaved = true
 				} else {
 					print("Invalid index")
 				}
@@ -123,6 +124,8 @@ func mainLoop() {
 				print("Change \"\(currentNode.inside[inputIndex!].value)\" to:")
 				let inputEdit = readLine(strippingNewline: true)!
 				currentNode.inside[inputIndex!].value = inputEdit
+				printCurrentNode()
+				changesNotSaved = true
 			} else {
 				print("Invalid index")
 			}
@@ -134,6 +137,8 @@ func mainLoop() {
 			}
 			if inputIndex! >= 0 && inputIndex! <= currentNode.inside.count - 1 {
 				currentNode.inside.remove(at: inputIndex!)
+				printCurrentNode()
+				changesNotSaved = true
 			} else {
 				print("Invalid index")
 				mainLoop()
@@ -147,6 +152,7 @@ func mainLoop() {
 			if inputIndex! >= 0 && inputIndex! <= currentNode.inside.count - 1 {
 				currentPath.append(currentNode)
 				currentNode = currentNode.inside[inputIndex!]
+				printCurrentNode()
 			} else {
 				print("Invalid index")
 			}
@@ -154,9 +160,11 @@ func mainLoop() {
 		} else if inputArguments[0] == "u" {
 			if currentPath.count == 1 {
 				print("Already in the top node")	
+				printCurrentNode()
 			} else {
 				currentPath.removeLast()	
 				currentNode = currentPath.last!
+				printCurrentNode()
 			} 
 			mainLoop()
 		} else if inputArguments[0] == "h" {
@@ -186,7 +194,7 @@ func mainLoop() {
 						"""
 						Changes has not been saved. Do you want to save?\n
 						Press q again to exit anyway or s to save.\n
-						Press any key to continue.
+						Or type anything to continue.
 						"""
 					)
 					let inputLine = readLine(strippingNewline: true)!
@@ -197,6 +205,7 @@ func mainLoop() {
 						print("Exit")
 					} else {
 						print("Continue.")
+						printCurrentNode()
 						mainLoop()
 					}
 				} else {
@@ -205,6 +214,16 @@ func mainLoop() {
 			}
 		} else if inputArguments[0] == "qq" {
 			print("Exit.")
+		} else if inputArguments.count == 1 && Int(inputArguments[0]) != nil {
+			inputIndex = Int(inputArguments[0])
+			if inputIndex! >= 0 && inputIndex! <= currentNode.inside.count - 1 {
+				currentPath.append(currentNode)
+				currentNode = currentNode.inside[inputIndex!]
+			} else {
+				print("Invalid index")
+			}
+			printCurrentNode()
+			mainLoop()
 		} else if inputArguments.count > 0 {
 			changesNotSaved = true
 			var newWordValue = ""
@@ -212,14 +231,19 @@ func mainLoop() {
 			newWordValue = inputArgumentsArray.joined(separator: " ")
 			let newWord = Word(value: newWordValue, inside: [])
 			currentNode.inside.append(newWord)
-			for (index, word) in currentNode.inside.enumerated() {
-				print("\(index): \(word.value)")
-			}
+			printCurrentNode()
 			mainLoop()
 		} else {
 			print("Unknown command")
 			mainLoop()
 		}
+}
+
+func printCurrentNode(){
+	print("Current word: " + currentNode.value)
+	for (index, word) in currentNode.inside.enumerated() {
+		print("\(index): \(word.value)")
+	}
 }
 
 func save(){
