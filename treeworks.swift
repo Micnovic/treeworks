@@ -65,7 +65,6 @@ func mainLoop() {
 			mainLoop()
 		} else if inputArguments[0] == "s" {
 			save()
-			print("Saved.")
 			printCurrentNode()	
 			mainLoop()
 		} else if inputArguments[0] == "w" {
@@ -77,7 +76,7 @@ func mainLoop() {
 				newWordValue = inputArgumentsArray.joined(separator: " ")
 			} else {
 				print("Insert new word:")
-				newWordValue = readLine(strippingNewline: true)!
+				newWordValue = readLine(strippingNewline: true) ?? ""
 			}
 			let newWord = Word(value: newWordValue, inside: [])
 			currentNode.inside.append(newWord)
@@ -87,7 +86,7 @@ func mainLoop() {
 		} else if inputArguments[0] == "c" {
 			if inputIndex == nil {
 				print("Select index to copy: ")
-				inputIndex = Int(readLine(strippingNewline: true)!)!
+				inputIndex = Int(readLine(strippingNewline: true)!) ?? -1
 			}
 			if inputIndex! >= 0 && inputIndex! <= currentNode.inside.count - 1 {
 				buffer = copySubtree(currentNode.inside[inputIndex!])
@@ -99,14 +98,13 @@ func mainLoop() {
 		} else if inputArguments[0] == "paste" {
 			if inputIndex == nil {
 				print("Select index to paste: ")
-				inputIndex = Int(readLine(strippingNewline: true)!)!
+				inputIndex = Int(readLine(strippingNewline: true)!) ?? -1
 			}
 			if buffer != nil {
 				if inputIndex! >= 0 && inputIndex! <= currentNode.inside.count - 1 {
 					currentNode.inside[inputIndex!] = buffer!
 				} else if inputIndex! == currentNode.inside.count {
 					currentNode.inside.append(buffer!)
-					printCurrentNode()
 					changesNotSaved = true
 				} else {
 					print("Invalid index")
@@ -114,58 +112,57 @@ func mainLoop() {
 			} else {
 				print("Buffer is empty")
 			}
+			printCurrentNode()
 			mainLoop()
 		} else if inputArguments[0] == "e" {
 			if inputIndex == nil {
 				print("Index to edit:")
-				inputIndex = Int(readLine(strippingNewline: true)!)!
+				inputIndex = Int(readLine(strippingNewline: true)!) ?? -1
 			}
 			if inputIndex! >= 0 && inputIndex! <= currentNode.inside.count - 1 {
 				print("Change \"\(currentNode.inside[inputIndex!].value)\" to:")
 				let inputEdit = readLine(strippingNewline: true)!
 				currentNode.inside[inputIndex!].value = inputEdit
-				printCurrentNode()
 				changesNotSaved = true
 			} else {
 				print("Invalid index")
 			}
+			printCurrentNode()
 			mainLoop()
 		} else if inputArguments[0] == "d" {
 			if inputIndex == nil {
 				print("Delete at index:")
-				inputIndex = Int(readLine(strippingNewline: true)!)!
+				inputIndex = Int(readLine(strippingNewline: true)!) ?? -1
 			}
 			if inputIndex! >= 0 && inputIndex! <= currentNode.inside.count - 1 {
 				currentNode.inside.remove(at: inputIndex!)
-				printCurrentNode()
 				changesNotSaved = true
 			} else {
 				print("Invalid index")
-				mainLoop()
 			}
+			printCurrentNode()
 			mainLoop()
 		} else if inputArguments[0] == "g" {
 			if inputIndex == nil {
 				print("To index:")
-				inputIndex! = Int(readLine(strippingNewline: true)!)!
+				inputIndex = Int(readLine(strippingNewline: true)!) ?? -1
 			}
 			if inputIndex! >= 0 && inputIndex! <= currentNode.inside.count - 1 {
 				currentPath.append(currentNode)
 				currentNode = currentNode.inside[inputIndex!]
-				printCurrentNode()
 			} else {
 				print("Invalid index")
 			}
+			printCurrentNode()
 			mainLoop()
 		} else if inputArguments[0] == "u" {
 			if currentPath.count == 1 {
 				print("Already in the top node")	
-				printCurrentNode()
 			} else {
 				currentPath.removeLast()	
 				currentNode = currentPath.last!
-				printCurrentNode()
 			} 
+			printCurrentNode()
 			mainLoop()
 		} else if inputArguments[0] == "h" {
 			print(
@@ -197,7 +194,7 @@ func mainLoop() {
 						Or type anything to continue.
 						"""
 					)
-					let inputLine = readLine(strippingNewline: true)!
+					let inputLine = readLine(strippingNewline: true) ?? ""
 					if inputLine == "q" {
 						print("Exit.")
 					} else if inputLine == "s" {
@@ -235,6 +232,7 @@ func mainLoop() {
 			mainLoop()
 		} else {
 			print("Unknown command")
+			printCurrentNode()
 			mainLoop()
 		}
 }
